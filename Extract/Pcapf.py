@@ -21,7 +21,7 @@ t = []
 
 l = [0 for i in range(60*10)]
 
-bin = [i/10 for i in range(60*10)]
+bin = np.arange(0.0, 60.0, 0.1)
 
 for pkt in pcap1:
     ti = (int)(round(pkt.time-time1, 1))
