@@ -114,7 +114,8 @@ def pcap2csv(in_pcap, out_csv, ip_address, last_relative_time):
         # and then call render_csv_row() with both representations to generate
         # the CSV row.
         srno = 1
-        category = out_csv.split('_')
+        category = os.path.basename(out_csv).split('_')
+        # print(category)
         pkts = rdpcap(in_pcap)
         starting_time = pkts[0].time
        

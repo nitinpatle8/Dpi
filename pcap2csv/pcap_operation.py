@@ -12,7 +12,7 @@ last_rel_time = 60.0
 
 def listDir(dir):
 
-    filenames = [os.path.join(dir, file) for file in os.listdir(dir)]
+    filenames = [os.path.join(dp, f) for dp, dn, filenames in os.walk(dir) for f in filenames if os.path.splitext(f)[1] == '.pcap']
 
     return filenames
 
@@ -23,10 +23,16 @@ def files2csv(filenames):
         filecsv = filename.removesuffix('.pcap')
         filecsv = filecsv + '.csv'
         try:
+            # if pcap file exists and corresponding csv file doesn't exists
+            # then do the operations 
             if(p2c.check_files(filename, filecsv)):
+                # do pcap2csv 
+                # if error comes delete that file
                 if not p2c.pcap2csv(filename, filecsv, ip_address, last_rel_time):
                     print(f"{filecsv} deleting this file")
                     os.remove(filecsv)
+            else:
+                print("csv file already exists")
         except:
             print(f"{filename} not converted to csv")
             os.remove(filecsv)
@@ -39,7 +45,8 @@ def __main__():
 
         elif path.isdir(sys.argv[1]):
             # print(sys.argv[1])
-            filenames = listDir(str(sys.argv[1]))
+            dir = sys.argv[1]
+            filenames = [os.path.join(dp, f) for dp, dn, filenames in os.walk(dir) for f in filenames if os.path.splitext(f)[1] == '.pcap']
             files2csv(filenames)
         
         print("successful converstion to csv")
