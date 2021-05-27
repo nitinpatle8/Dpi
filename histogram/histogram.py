@@ -18,7 +18,7 @@ class histogram:
 
     def insert_pkt(self, pkt_byte, time, value):
         
-        self.mat[pkt_byte//self.normalisef][math.floor(time * self.N/60.0)] += value
+        self.mat[math.floor(pkt_byte//self.normalisef)][math.floor(time * self.N/60.0)] += value
 
     
 def csv2histogram(folder):
@@ -43,7 +43,7 @@ def csv2histogram(folder):
         # create a historgram out of this csv file 
         # append that histogram's matrix to data list
 
-        h = histogram()
+        h = histogram(300,300)
         category = ''
         with open(file) as csv_file:
             csv_reader = csv.reader(csv_file, delimiter='|')
@@ -54,10 +54,20 @@ def csv2histogram(folder):
                 category = row[10]
                 pkt_size = int(row[3])
                 time = float(row[2])
+                # if(time >= 15.0):
+                #     break
+                # if(row[1] == '0'):
+                #     value = -1
+                # if(row[1] == '1'):
+                #     value = 2
+                value = 1
                 # print(pkt_size, time)
-                h.insert_pkt(pkt_size, time, 1)
+                h.insert_pkt(pkt_size, time, value)
                 line_count += 1
-            
+        
+        # h.mat = h.mat - h.mat.mean()
+        # h.mat = h.mat / h.mat.max()
+
         data.append(h.mat)
     
         label.append(cat[category])    
@@ -72,7 +82,9 @@ def __main__():
     # [test_data, test_label] = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/pcapfile_test/pcapfile_test')
     
     model = keras.Sequential([
+      
             keras.layers.Flatten(input_shape=(300,300)), # 2d array to 1 d array
+             # 2d array to 1 d array
             keras.layers.Dense(128, activation=tf.nn.relu),
             keras.layers.Dense(5, activation=tf.nn.softmax)
         ])
@@ -80,7 +92,7 @@ def __main__():
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # feeding the training data -> with label 
-    model.fit(train_data, train_label, epochs=10)
+    model.fit(train_data, train_label, epochs=100)
 
     test_data, test_label = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/pcapfile_test')
 
