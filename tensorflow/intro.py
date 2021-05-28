@@ -7,3 +7,15 @@
 # 60,000 train
 # 10,000 test
 
+# cnn
+# convolution
+# relu 
+# pooling 
+# fully connected
+
+# prediction of that with earlier same 
+
+# x -> deformed images
+# o -> deformed images 
+
+# computer understands an image 
