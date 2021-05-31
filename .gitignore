@@ -1,5 +1,12 @@
 pcapfile_test/*
 pcapfile_train/*
+pcapfile_train/browsing/*
+pcapfile_train/chat/*
+pcapfile_train/filetransfer/*
+pcapfile_train/voip/*
+pcapfile_test/browsing/*
+pcapfile_test/filetransfer/*
+pcapfile_test/voip/*
 dump_test/*
 dump_train/*
 tensorflow/*

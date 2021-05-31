@@ -22,7 +22,7 @@ class histogram:
 
     def insert_pkt(self, pkt_byte, time, value):
         
-        self.mat[math.floor(pkt_byte//self.normalisef)][math.floor(time * self.N/60.0)] += value
+        self.mat[math.floor(pkt_byte//self.normalisef)][math.floor(time * self.N/15.0)] += value
 
 def listcsv(folder):
     return [os.path.join(dp, f) for dp, dn, filenames in os.walk(folder) for f in filenames if os.path.splitext(f)[1] == '.csv']
@@ -32,7 +32,7 @@ def csvfile2histogram(file):
     if(not os.path.exists(file)):
         return False
 
-    cat = {'browsing':0, 'chat':1, 'filetransfer':2, 'streaming':3, 'voip':4}
+    cat = {'browsing':0, 'chat':1, 'filetransfer':2, 'videostreaming':3, 'musicstreaming': 4, 'voip':5}
 
     h = histogram(300, 300)
     category = ''
@@ -46,8 +46,8 @@ def csvfile2histogram(file):
             category = row[10]
             pkt_size = int(row[3])
             time = float(row[2])
-            # if(time >= 15.0):
-            #     break
+            if(time >= 15.0):
+                break
             # if(row[1] == '0'):
             #     value = -1
             # if(row[1] == '1'):
@@ -132,8 +132,8 @@ def __main__():
 
 # feeding the training data -> with label 
     # print(len(train_data))
-    print(train_data)
-    model.fit(train_data, train_label, epochs=10)
+    # print(train_data)
+    model.fit(train_data, train_label, epochs=50)
 
     test_data, test_label = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/csvfile_test')
 
