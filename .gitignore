@@ -1,4 +1,5 @@
-
+pcapfile_test/*
+pcapfile_train/*
 dump_test/*
 dump_train/*
 tensorflow/*
