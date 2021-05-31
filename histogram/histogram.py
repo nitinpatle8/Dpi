@@ -71,11 +71,13 @@ def csv2histogram(folder):
     # 
 
     if(not os.path.exists(folder)):
+        print("returning from here")
         return False
      
     filenames = listcsv(folder)
-
-    cat = {'browsing':0, 'chat':1, 'filetransfer':2, 'streaming':3, 'voip':4}
+    
+    print('size of filenames is ' + str(len(filenames)))
+    cat = {'browsing':0, 'chat':1, 'filetransfer':2, 'videostreaming':3, 'musicstreaming':4, 'voip': 5}
 
     data = []
     label = []
@@ -95,8 +97,12 @@ def csv2histogram(folder):
 
 def __main__():
 
-    train_data, train_label = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/csvfile_train')
+    # print('this path exists ' + str(os.path.exists('/home/hackerone/Documents/intern/DPIProjects/Dpi/csvfile_train')))
 
+    train_data, train_label = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/csvfile_train')
+    if(len(train_data)==0):
+        print('len th zero')
+        return
     # [test_data, test_label] = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/pcapfile_test/pcapfile_test')
     
     # model = keras.Sequential([
@@ -120,7 +126,7 @@ def __main__():
     model.add(keras.layers.Dense(units=64, activation='relu'))
     # model.add(keras.layers.Dense(units=84, activation='relu'))
 
-    model.add(keras.layers.Dense(units=5, activation = 'softmax'))
+    model.add(keras.layers.Dense(units=6, activation = 'softmax'))
 
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 

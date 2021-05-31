@@ -21,7 +21,7 @@ def files2csv(filenames, dest):
     
     for filename in filenames:
         filecsv = filename.removesuffix('.pcap')
-        filecsv = filecsv + 'csv'
+        filecsv = filecsv + '.csv'
         filecsv = os.path.join(dest, os.path.basename(filecsv))
         try:
             # if pcap file exists and corresponding csv file doesn't exists
