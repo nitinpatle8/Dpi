@@ -19,7 +19,7 @@ def render_csv_row(pkt, fh_csv, ip_address, srno, category, starting_time, last_
         if IP in pkt:
             src_ip = pkt[IP].src
             dst_ip = pkt[IP].dst
-            if(ip_address[0] == src_ip):
+            if(src_ip in ip_address):
                 up_down = 1
             else:
                 up_down = 0
@@ -72,7 +72,7 @@ def render_csv_row(pkt, fh_csv, ip_address, srno, category, starting_time, last_
     #       |   |   |   |    o-------------------------> {5}  L4 protocol
     #       |   |   |   o------------------------------> {4}  L3 protocol
     #       |   |   o----------------------------------> {3}  pkt length L4
-    #       |   o--------------------------------------> {2}  t ime
+    #       |   o--------------------------------------> {2}  time
     #       o------------------------------------------> {1}  upstream/downstream
     #       o------------------------------------------> {0} sr_no
 

@@ -6,7 +6,7 @@ import sys
 # this pcap_operation file is to get files from folder 
 # and pass that list to pcap2csv generator
 
-ip_address = ['192.168.43.153', '2001:4860:4864:6::1d']
+ip_address = ['172.20.10.5', '192.168.43.197', '192.168.43.197']
 
 last_rel_time = 60.0
 
