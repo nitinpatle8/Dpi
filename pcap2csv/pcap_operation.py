@@ -17,11 +17,12 @@ def listDir(dir):
     return filenames
 
 
-def files2csv(filenames):
+def files2csv(filenames, dest):
     
     for filename in filenames:
         filecsv = filename.removesuffix('.pcap')
         filecsv = filecsv + '.csv'
+        filecsv = os.path.join(dest, os.path.basename(filecsv))
         try:
             # if pcap file exists and corresponding csv file doesn't exists
             # then do the operations 
@@ -47,7 +48,7 @@ def __main__():
             # print(sys.argv[1])
             dir = sys.argv[1]
             filenames = [os.path.join(dp, f) for dp, dn, filenames in os.walk(dir) for f in filenames if os.path.splitext(f)[1] == '.pcap']
-            files2csv(filenames)
+            files2csv(filenames, sys.argv[2])
         
         print("successful converstion to csv")
     except:

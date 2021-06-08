@@ -22,7 +22,7 @@ class histogram:
 
     def insert_pkt(self, pkt_byte, time, value):
         
-        self.mat[math.floor(pkt_byte//self.normalisef)][math.floor(time * self.N/60.0)] += value
+        self.mat[math.floor(pkt_byte//self.normalisef)][math.floor(time * self.N/15.0)] += value
 
 def listcsv(folder):
     return [os.path.join(dp, f) for dp, dn, filenames in os.walk(folder) for f in filenames if os.path.splitext(f)[1] == '.csv']
@@ -32,7 +32,7 @@ def csvfile2histogram(file):
     if(not os.path.exists(file)):
         return False
 
-    cat = {'browsing':0, 'chat':1, 'filetransfer':2, 'streaming':3, 'voip':4}
+    cat = {'browsing':0, 'chat':1, 'filetransfer':2, 'videostreaming':3, 'musicstreaming': 4, 'voip':5}
 
     h = histogram(300, 300)
     category = ''
@@ -46,8 +46,8 @@ def csvfile2histogram(file):
             category = row[10]
             pkt_size = int(row[3])
             time = float(row[2])
-            # if(time >= 15.0):
-            #     break
+            if(time >= 15.0):
+                break
             # if(row[1] == '0'):
             #     value = -1
             # if(row[1] == '1'):
@@ -71,11 +71,13 @@ def csv2histogram(folder):
     # 
 
     if(not os.path.exists(folder)):
+        print("returning from here")
         return False
      
     filenames = listcsv(folder)
-
-    cat = {'browsing':0, 'chat':1, 'filetransfer':2, 'streaming':3, 'voip':4}
+    
+    print('size of filenames is ' + str(len(filenames)))
+    cat = {'browsing':0, 'chat':1, 'filetransfer':2, 'videostreaming':3, 'musicstreaming':4, 'voip': 5}
 
     data = []
     label = []
@@ -95,8 +97,12 @@ def csv2histogram(folder):
 
 def __main__():
 
-    train_data, train_label = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/pcapfile_train')
+    # print('this path exists ' + str(os.path.exists('/home/hackerone/Documents/intern/DPIProjects/Dpi/csvfile_train')))
 
+    train_data, train_label = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/csvfile_train')
+    if(len(train_data)==0):
+        print('len th zero')
+        return
     # [test_data, test_label] = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/pcapfile_test/pcapfile_test')
     
     # model = keras.Sequential([
@@ -106,10 +112,10 @@ def __main__():
     #         keras.layers.Dense(128, activation=tf.nn.relu),
     #         keras.layers.Dense(5, activation=tf.nn.softmax)
     #     ])
-    train_data = train_data.reshape(len(train_data), 1500, 1500, 1)
+    train_data = train_data.reshape(len(train_data), 300, 300, 1)
     model = Sequential()
 
-    model.add(keras.layers.Conv2D(filters=10, kernel_size=(10, 10),  activation='relu', input_shape=(1500,1500,1)))
+    model.add(keras.layers.Conv2D(filters=10, kernel_size=(10, 10),  activation='relu', input_shape=(300,300,1)))
     model.add(keras.layers.MaxPooling2D())
 
     model.add(keras.layers.Conv2D(filters=20, kernel_size=(10, 10),  activation='relu'))
@@ -120,16 +126,18 @@ def __main__():
     model.add(keras.layers.Dense(units=64, activation='relu'))
     # model.add(keras.layers.Dense(units=84, activation='relu'))
 
-    model.add(keras.layers.Dense(units=5, activation = 'softmax'))
+    model.add(keras.layers.Dense(units=6, activation = 'softmax'))
 
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # feeding the training data -> with label 
+    # print(len(train_data))
+    # print(train_data)
     model.fit(train_data, train_label, epochs=50)
 
-    test_data, test_label = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/pcapfile_test')
+    test_data, test_label = csv2histogram('/home/hackerone/Documents/intern/DPIProjects/Dpi/csvfile_test')
 
-    test_data = test_data.reshape(len(test_data), 1500, 1500, 1)
+    test_data = test_data.reshape(len(test_data), 300, 300, 1)
 
     test_loss, test_acc = model.evaluate(test_data, test_label)
 
@@ -137,4 +145,4 @@ def __main__():
     print('test accuracy', test_acc)
     
     
-# __main__()
+__main__()
